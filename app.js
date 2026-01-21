@@ -128,5 +128,33 @@ function csvConverter(data) {
     console.log(converter(csvData));
 
 
-    
+    function reduceConvert(fileData) {
+        
+        return fileData.split("\n").reduce((output, row, index, arr) => {
+
+            let values = row.split(",")
+
+            if (index == 0) {
+                output.headers = values;
+            } else{
+                let obj = {};
+                values.forEach((val, index) => {
+                    if (index < output.headers.length) {
+                        obj[output.headers[index]] = val;
+                    } else {
+                        obj[`misc${index - output.headers.length + 1}`] = val;
+                    }
+                });
+                if (!output.records) {
+                    output.records = [];
+                }
+                output.records.push(obj);
+            }
+
+            return output;
+        }, {}).records;
+    }
+
+    console.log(reduceConvert(csvData));
+
 console.log("EXERCISE 4:\n==========\n");
